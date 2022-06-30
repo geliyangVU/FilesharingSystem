@@ -35,7 +35,10 @@ app.post("/upload", upload.single("file"), async (req,res)=>{
      res.render("index",{fileLink :`${req.headers.origin}/file/${file.id}`})
 })
 
-app.get("/file/:id", async (req,res)=>{
+
+app.route("/file/:id").get(download).post(download)
+
+async function download(req,res){
     const file = await File.findById(req.params.id)
 
     if(file.password != null){
@@ -58,7 +61,7 @@ app.get("/file/:id", async (req,res)=>{
     console.log(file.downloadCount)
 
     res.download(file.path, file.originalName)
-})
 
+}
 
 app.listen(process.env.PORT)
