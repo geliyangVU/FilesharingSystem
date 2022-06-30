@@ -46,6 +46,11 @@ app.get("/file/:id", async (req,res)=>{
     }
 
 
+    if(!await bcrypt.compare(req.body.password, file.password)){
+        res.render("password", {error: true})
+        return
+    }
+
 
     file.downloadCount++
     await file.save()
