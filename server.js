@@ -35,8 +35,20 @@ app.post("/upload", upload.single("file"), async (req,res)=>{
 
 app.get("/file/:id", async (req,res)=>{
     const file = await File.findById(req.params.id)
+    if(file.password != null){
+        res.render("password")
+        return
+    }
+    // if()
+
+
+
+
+
     file.downloadCount++
     await file.save()
+
+    console.log(file.downloadCount)
 
     res.download(file.path, file.originalName)
 })
