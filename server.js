@@ -2,6 +2,7 @@ require("dotenv").config()
 const express = require("express")
 const multer = require("multer")
 const bcrypt = require("bcrypt")
+const File = require("./models/File")
 
 const mongoose = require("mongoose")
 const app = express()
@@ -24,9 +25,17 @@ app.post("/upload", upload.single("file"), async (req,res)=>{
         path: req.file.path,
         originalName:req.file.originalname
     }
-    if(req.body.password != null && req.body.password !== ""){
-        fileData.password = await bcrypt.hash(req.body.password,100)
+    if(req.body.password != null && req.body.password != ""){
+        fileData.password = await bcrypt.hash(req.body.password,10)
     }
+
+    const file=await File.create(fileData)
+     res.render("index",{fileLink :`${req.headers.origin}/file/${file.id}`})
 })
+
+app.get("/file/:id",(req,res)=>{
+
+})
+
 
 app.listen(process.env.PORT)
